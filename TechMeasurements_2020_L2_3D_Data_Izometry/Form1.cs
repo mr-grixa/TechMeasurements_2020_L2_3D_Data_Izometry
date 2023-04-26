@@ -1,27 +1,20 @@
-﻿using SharpGL.Enumerations;
-using SharpGL;
+﻿using SharpGL;
+using SharpGL.Enumerations;
+using SharpGL.SceneGraph;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static TechMeasurements_2020_L2_3D_Data_Izometry.Class1;
-using SharpGL;
 using System.IO;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Net.Mime.MediaTypeNames;
+using System.Windows.Forms;
+
 
 namespace TechMeasurements_2020_L2_3D_Data_Izometry
 {
     public partial class Form1 : Form
     {
-        List<Point3D> points=new List<Point3D>();
-        List<byte[]> packets=new List<byte[]>();
+        List<Point3D> points = new List<Point3D>();
+        List<byte[]> packets = new List<byte[]>();
+        Cluster[] clusters;
         public Form1()
         {
             InitializeComponent();
@@ -37,55 +30,162 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
             // Сбрасываем модельно-видовую матрицу
             gl.MatrixMode(MatrixMode.Projection);
             gl.LoadIdentity();
-            gl.Perspective((double)numericUpDown_Fov.Value, (double)openGLControl1.Width / (double)openGLControl1.Height, 0.01, 10000);
 
-            // Двигаем перо вглубь экрана
             double camX = (double)numericUpDownX.Value;
             double camY = (double)numericUpDownY.Value;
             double camZ = (double)numericUpDownZ.Value;
+
+            if (checkBox_perspective.Checked)
+            {
+                gl.Perspective((double)numericUpDown_Fov.Value, (double)openGLControl1.Width / (double)openGLControl1.Height, 0.01, 10000);
+            }
+            else
+            {
+                double w = (double)openGLControl1.Width / (double)openGLControl1.Height;
+                double h = 1.0;
+                h = h * camZ;
+                w = w * camZ;
+                gl.Ortho(-w, w, -h, h, -10000, 10000);
+            }
+
+            // Двигаем перо вглубь экрана
             gl.Translate(camX, camY, -camZ);
+
             // Вращаем точки 
-            double angleX = (double)numericUpDownRX.Value /** Math.PI / 180.0f*/;
-            double angleY = (double)numericUpDownRY.Value /** Math.PI / 180.0f*/;
-            double angleZ = (double)numericUpDownRZ.Value /** Math.PI / 180.0f*/;
-            gl.Rotate(angleX, 1.0f, 0.0f, 0.0f);
-            gl.Rotate(angleY, 0.0f, 1.0f, 0.0f);
-            gl.Rotate(angleZ, 0.0f, 0.0f, 1.0f);
+            float angleX = (float)numericUpDownRX.Value /** Math.PI / 180.0f*/;
+            float angleY = (float)numericUpDownRY.Value /** Math.PI / 180.0f*/;
+            float angleZ = (float)numericUpDownRZ.Value /** Math.PI / 180.0f*/;
+            gl.Rotate(angleX, angleY, angleZ);
 
 
-            // включаем режим смешивания
-            gl.Enable(OpenGL.GL_BLEND);
 
 
             gl.Begin(OpenGL.GL_POINTS);
-            
-            if (points != null)
+
+            //Matrix matrix = gl.GetModelViewMatrix();
+            int Xmin = (int)numericUpDown_Xmin.Value;
+            int Xmax = (int)numericUpDown_Xmax.Value;
+            int Ymin = (int)numericUpDown_Ymin.Value;
+            int Ymax = (int)numericUpDown_Ymax.Value;
+            int Zmin = (int)numericUpDown_Zmin.Value;
+            int Zmax = (int)numericUpDown_Zmax.Value;
+
+            // Получаем текущую матрицу вида
+            Matrix matrix = gl.GetModelViewMatrix();
+
+            // Находим расстояние от камеры до каждой точки
+            double maxDistance = 10; // Максимальное расстояние
+            if (checkBox_dot.Checked && points != null)
             {
-                int Xmin = (int)numericUpDown_Xmin.Value;
-                int Xmax = (int)numericUpDown_Xmax.Value;
-                int Ymin = (int)numericUpDown_Ymin.Value;
-                int Ymax = (int)numericUpDown_Ymax.Value;
-                int Zmin = (int)numericUpDown_Zmin.Value;
-                int Zmax = (int)numericUpDown_Zmax.Value;
+                
+
                 foreach (Point3D point in points)
                 {
-                    if (!checkBox_otsrch.Checked ||(point.x>Xmin&&point.x<Xmax&&
-                        point.y > Ymin && point.y < Ymax &&
-                        point.z > Zmin && point.z < Zmax))
+                    if (!checkBox_otsrch.Checked || (point.X > Xmin && point.X < Xmax &&
+                        point.Y > Ymin && point.Y < Ymax &&
+                        point.Z > Zmin && point.Z < Zmax))
                     {
-                        gl.Color(1d, 1d, 1d);
-                        gl.Vertex(point.x, point.y, point.z);
+                        double distance = Math.Sqrt(Math.Pow(point.X - camX, 2) + Math.Pow(point.Y - camY, 2) + Math.Pow(point.Z + camZ, 2));
+                        double intensity = 1.0 - distance / maxDistance; // Интенсивность точки зависит от расстояния до камеры
+                        intensity = 0.5 + Math.Max(0.0, intensity / 2); // Интенсивность не может быть меньше нуля
+                        gl.Color(intensity, intensity, intensity); // Устанавливаем цвет точки с учетом интенсивности
+
+                        gl.Vertex(point.X, point.Y, point.Z);
                     }
                 }
             }
+            if (checkBox_cluster.Checked && points != null)
+            {
+                if (clusters == null)
+                {
+                    GenerateCluster();
+                }
+                Random random = new Random(42);
+                foreach (Cluster cluster in clusters)
+                {
+                    gl.Color(random.NextDouble(), random.NextDouble(), random.NextDouble());
+                    if (cluster.Points.Count != 0)
+                    {
+                        foreach (Point3D point in cluster.Points)
+                        {
+                            if (!checkBox_otsrch.Checked || (point.X > Xmin && point.X < Xmax &&
+                                point.Y > Ymin && point.Y < Ymax &&
+                                point.Z > Zmin && point.Z < Zmax))
+                            {
 
+                                gl.Vertex(point.X, point.Y, point.Z);
+                            }
+                        }
+                    }
+                }
+            }
+            gl.End();
 
-            gl.Perspective((double)numericUpDown_Fov.Value, (double)openGLControl1.Width / (double)openGLControl1.Height, 0.01, 100);
+            if (checkBox_cube.Checked && points != null)
+            {
+                if (clusters == null)
+                {
+                    GenerateCluster();
+                }
+                Random random = new Random(42);
+                foreach (Cluster cluster in clusters)
+                {
+                    gl.Color(random.NextDouble(), random.NextDouble(), random.NextDouble());
+                    if (cluster.Points.Count > numericUpDown_clusterMinVes.Value && cluster.Radius < (double)numericUpDown_cubeMaxRadius.Value)
+                    {
+                        Draw.Rectangle(gl, cluster.Center.X, cluster.Center.Y, cluster.Center.Z, cluster.RadiusX, cluster.RadiusY, cluster.RadiusZ);
+                    }
+
+                }
+            }
+            if (checkBox_corridor.Checked && points != null)
+            {
+                //if (clusters == null)
+                //{
+                //    GenerateCluster();
+                //}
+                
+                double corridorZ=(double)numericUpDown_corridor.Value;
+                double corridorY = (double)numericUpDown_corridorZ.Value;
+                double corridorX = (double)numericUpDown_corridorX.Value;
+                gl.Color(1f,0.5f,0.5f);
+                Draw.Rectangle(gl,0,0, corridorZ / 2, corridorX, corridorY, corridorZ/2);
+                gl.Color(0.5f, 1f, 1f);
+                Draw.Rectangle(gl, 0,0, -corridorZ / 2, corridorX, corridorY, corridorZ/2);
+            }
+
 
             // Завершаем работу
-            gl.End();
+            
         }
+        private void GenerateCluster()
+        {
+            int Xmin = (int)numericUpDown_Xmin.Value;
+            int Xmax = (int)numericUpDown_Xmax.Value;
+            int Ymin = (int)numericUpDown_Ymin.Value;
+            int Ymax = (int)numericUpDown_Ymax.Value;
+            int Zmin = (int)numericUpDown_Zmin.Value;
+            int Zmax = (int)numericUpDown_Zmax.Value;
+            if (!checkBox_otsrch.Checked)
+            {
+                clusters = KMeans.gen(points, (int)numericUpDown_clusterCount.Value, (int)numericUpDown_clusterMax.Value);
+            }
+            else
+            {
+                List<Point3D> point3Ds = new List<Point3D>();
+                foreach (Point3D point in points)
+                {
 
+                    if (point.X > Xmin && point.X < Xmax &&
+                        point.Y > Ymin && point.Y < Ymax &&
+                        point.Z > Zmin && point.Z < Zmax)
+                    {
+                        point3Ds.Add(point);
+                    }
+                }
+                clusters = KMeans.gen(point3Ds, (int)numericUpDown_clusterCount.Value, (int)numericUpDown_clusterMax.Value);
+            }
+        }
         private void buttonLoad_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -110,9 +210,7 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
                         i++; // пропустить разделитель
                     }
                 }
-
             }
-
         }
 
         private void button_next_Click(object sender, EventArgs e)
@@ -121,14 +219,14 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
             {
                 int start = (int)numericUpDown_start.Value;
                 int delta = (int)numericUpDown_delta.Value;
-                numericUpDown_start.Value=start + GenerateXYZ(start, delta);
+                numericUpDown_start.Value = start + GenerateXYZ(start, delta);
+                clusters = null;
             }
-            
+
         }
-        private int GenerateXYZ(int start,int delta)
+        private int GenerateXYZ(int start, int delta)
         {
             points.Clear();
-            listBox1.Items.Clear();
             double[] angles = new double[] {
                     -30.67,
                     -9.33,
@@ -162,7 +260,7 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
                     9.33,
                     -10.67,
                     10.67};
-            if (delta> 0 )
+            if (delta > 0)
             {
                 for (int i = start; i < packets.Count && i < start + delta; i++)
                 {
@@ -174,45 +272,39 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
             else
             {
                 double angle = ((double)packets[start][1] * 256 + (double)packets[start][0]) / 100;
-                double angleOld=-1;
+                double angleOld = -1;
                 bool test = true;
-                double angleNew=0;
+                double angleNew = 0;
                 int delt = 0;
-                for (int i = start;i<packets.Count&& test ; i++)
+                for (int i = start; i < packets.Count && test; i++)
                 {
 
                     delt = i;
                     angleOld = angleNew;
-                    angleNew = ((double)packets[i][1] * 256 + (double)packets[i][0]) / 100;                   
+                    angleNew = ((double)packets[i][1] * 256 + (double)packets[i][0]) / 100;
                     test = angleNew > angleOld;
                     if (test) { search(i, angleNew); }
                 }
-                return delt- start;
+                return delt - start;
             }
 
             void search(int i, double azimuth)
             {
-                //listBox1.Items.Add(azimuth);
-                if (packets[i].Length < 98)
-                {
-                    listBox1.Items.Add(i);
-                }
-                else
-                {
+
                     for (int j = 2; j < 98; j += 3)
                     {
-                        double d = (packets[i][j + 1] * 256 + packets[i][j]) * 0.002;
+                        double distance = (packets[i][j + 1] * 256 + packets[i][j]) * 0.002;
                         double alpha = Math.PI * angles[((j + 1) / 3) - 1] / 180;
                         double beta = Math.PI * azimuth / 180;
 
-                        double x = d * Math.Cos(beta) * Math.Cos(alpha);
-                        double y = d * Math.Cos(beta) * Math.Sin(alpha);
-                        double z = d * Math.Sin(beta);
+                        double x = distance * Math.Cos(beta) * Math.Cos(alpha);
+                        double y = distance * Math.Cos(beta) * Math.Sin(alpha);
+                        double z = distance * Math.Sin(beta);
                         //listBox1.Items.Add(packets[i][j + 2]);
                         points.Add(new Point3D(x, y, z));
 
                     }
-                }
+
 
                 //if (packets[i].Length > 98)
                 //{
@@ -222,6 +314,8 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
                 //    //listBox1.Items.Add(timestamp.ToString("yyyy-MM-dd HH:mm:ss"));
                 //}
             }
+
+
 
         }
 
@@ -277,6 +371,11 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
                 int delta = (int)numericUpDown_delta.Value;
                 numericUpDown_start.Value = start + GenerateXYZ(start, delta);
             }
+        }
+
+        private void button_clusterNull_Click(object sender, EventArgs e)
+        {
+            clusters = null;
         }
     }
 }
