@@ -140,23 +140,15 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
             }
             if (checkBox_corridor.Checked && points != null)
             {
-                //if (clusters == null)
-                //{
-                //    GenerateCluster();
-                //}
-                
                 double corridorZ=(double)numericUpDown_corridor.Value;
                 double corridorY = (double)numericUpDown_corridorZ.Value;
                 double corridorX = (double)numericUpDown_corridorX.Value;
-                gl.Color(1f,0.5f,0.5f);
-                Draw.Rectangle(gl,0,0, corridorZ / 2, corridorX, corridorY, corridorZ/2);
-                gl.Color(0.5f, 1f, 1f);
-                Draw.Rectangle(gl, 0,0, -corridorZ / 2, corridorX, corridorY, corridorZ/2);
+                gl.Color(1f,0f,0f);
+                Draw.Rectangle(gl,0,0, -corridorZ / 2, corridorX, corridorY, corridorZ/2);
             }
 
+            gl.End();
 
-            // Завершаем работу
-            
         }
         private void GenerateCluster()
         {
@@ -376,6 +368,61 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
         private void button_clusterNull_Click(object sender, EventArgs e)
         {
             clusters = null;
+        }
+        private void button_coridor_Click(object sender, EventArgs e)
+        {
+            if (points != null)
+            {
+                if (clusters == null)
+                {
+                    GenerateCluster();
+                }
+                double MaxDistant = (double)numericUpDown_corridor.Value;
+                float chekX =(float)numericUpDown_corridorX.Value/2;
+                float chekY = (float)numericUpDown_corridorZ.Value/2;
+                RectangleF rectChek = new RectangleF(-chekX, -chekY, chekX*2, chekY * 2);
+                foreach (Cluster cluster in clusters)
+                {
+                    if (cluster.Points.Count > numericUpDown_clusterMinVes.Value &&
+                        cluster.Radius < (double)numericUpDown_cubeMaxRadius.Value)
+                    {
+                        float X1 = (float)(cluster.Center.X - cluster.RadiusX);
+                        //double Y2 = cluster.Center.X + cluster.RadiusX / 2;
+                        float Y1 = (float)(cluster.Center.Y - cluster.RadiusY);
+                       // double X2 = cluster.Center.Y + cluster.RadiusY / 2;
+                        double Z = -cluster.Center.Z - cluster.RadiusZ;
+                        RectangleF rectangle = new RectangleF(X1, Y1, (float)cluster.RadiusX*2, (float)cluster.RadiusY*2);
+                        if (Z > 0)
+                        {
+                            if (RectanglesIntersect(rectChek,rectangle))
+                            {
+                                if (Z < MaxDistant)
+                                {
+                                    MaxDistant = Z;
+                                }
+                            }
+
+                        }
+                    }
+
+
+                }
+                numericUpDown_corridor.Value = (decimal)Math.Abs(MaxDistant);
+            }
+            bool RectanglesIntersect(RectangleF rect1, RectangleF rect2)
+            {
+                // Проверка наложения прямоугольников друг на друга
+                if (rect1.Contains(rect2.Location) || rect2.Contains(rect1.Location))
+                    return true;
+
+                // Проверка пересечения проекций прямоугольников на оси координат
+                if (rect1.Right >= rect2.Left && rect1.Left <= rect2.Right &&
+                    rect1.Bottom >= rect2.Top && rect1.Top <= rect2.Bottom)
+                    return true;
+
+                return false;
+            }
+
         }
     }
 }
