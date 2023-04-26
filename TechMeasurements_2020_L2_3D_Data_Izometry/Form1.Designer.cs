@@ -716,7 +716,7 @@
             // checkBox_cube
             // 
             this.checkBox_cube.AutoSize = true;
-            this.checkBox_cube.Location = new System.Drawing.Point(8, 181);
+            this.checkBox_cube.Location = new System.Drawing.Point(153, 142);
             this.checkBox_cube.Name = "checkBox_cube";
             this.checkBox_cube.Size = new System.Drawing.Size(112, 17);
             this.checkBox_cube.TabIndex = 129;
@@ -725,7 +725,7 @@
             // 
             // numericUpDown_cubeMaxRadius
             // 
-            this.numericUpDown_cubeMaxRadius.Location = new System.Drawing.Point(75, 217);
+            this.numericUpDown_cubeMaxRadius.Location = new System.Drawing.Point(220, 178);
             this.numericUpDown_cubeMaxRadius.Maximum = new decimal(new int[] {
             1783793664,
             116,
@@ -742,7 +742,7 @@
             // 
             // numericUpDown_clusterMinVes
             // 
-            this.numericUpDown_clusterMinVes.Location = new System.Drawing.Point(8, 217);
+            this.numericUpDown_clusterMinVes.Location = new System.Drawing.Point(153, 178);
             this.numericUpDown_clusterMinVes.Maximum = new decimal(new int[] {
             1783793664,
             116,
@@ -765,7 +765,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(59, 201);
+            this.label14.Location = new System.Drawing.Point(204, 162);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(75, 13);
             this.label14.TabIndex = 133;
@@ -774,7 +774,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(5, 201);
+            this.label15.Location = new System.Drawing.Point(150, 162);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(37, 13);
             this.label15.TabIndex = 134;
@@ -973,7 +973,7 @@
             this.Controls.Add(this.numericUpDownX);
             this.Controls.Add(this.buttonLoad);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Щербинин Григорий 201-325";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Fov)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.openGLControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRZ)).EndInit();
