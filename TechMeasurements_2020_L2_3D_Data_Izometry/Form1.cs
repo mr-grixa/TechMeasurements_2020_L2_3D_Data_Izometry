@@ -127,7 +127,7 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
             {
                 if (clusters == null)
                 {
-                    GenerateCluster();
+                    GenerateCluster();###
                 }
                 Random random = new Random(42);
                 foreach (Cluster cluster in clusters)
