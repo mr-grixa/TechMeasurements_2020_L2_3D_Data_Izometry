@@ -63,25 +63,26 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
             gl.Begin(OpenGL.GL_POINTS);
 
             //Matrix matrix = gl.GetModelViewMatrix();
-            int Xmin = (int)numericUpDown_Xmin.Value;
-            int Xmax = (int)numericUpDown_Xmax.Value;
-            int Ymin = (int)numericUpDown_Ymin.Value;
-            int Ymax = (int)numericUpDown_Ymax.Value;
-            int Zmin = (int)numericUpDown_Zmin.Value;
-            int Zmax = (int)numericUpDown_Zmax.Value;
+            double Xmin = (double)numericUpDown_Xmin.Value;
+            double Xmax = (double)numericUpDown_Xmax.Value;
+            double Ymin = (double)numericUpDown_Ymin.Value;
+            double Ymax = (double)numericUpDown_Ymax.Value;
+            double Zmin = (double)numericUpDown_Zmin.Value;
+            double Zmax = (double)numericUpDown_Zmax.Value;
 
             // Получаем текущую матрицу вида
             Matrix matrix = gl.GetModelViewMatrix();
 
             // Находим расстояние от камеры до каждой точки
             double maxDistance = 10; // Максимальное расстояние
-            if (checkBox_dot.Checked && points != null)
+            if (checkBox_dot.Checked && points.Count>0)
             {
-                
+
 
                 foreach (Point3D point in points)
                 {
-                    if (!checkBox_otsrch.Checked || (point.X > Xmin && point.X < Xmax &&
+                    if (!checkBox_otsrch.Checked || (
+                        point.X > Xmin && point.X < Xmax &&
                         point.Y > Ymin && point.Y < Ymax &&
                         point.Z > Zmin && point.Z < Zmax))
                     {
@@ -94,7 +95,7 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
                     }
                 }
             }
-            if (checkBox_cluster.Checked && points != null)
+            if (checkBox_cluster.Checked && points.Count > 0)
             {
                 if (clusters == null)
                 {
@@ -108,7 +109,8 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
                     {
                         foreach (Point3D point in cluster.Points)
                         {
-                            if (!checkBox_otsrch.Checked || (point.X > Xmin && point.X < Xmax &&
+                            if (!checkBox_otsrch.Checked || (
+                                point.X > Xmin && point.X < Xmax &&
                                 point.Y > Ymin && point.Y < Ymax &&
                                 point.Z > Zmin && point.Z < Zmax))
                             {
@@ -121,7 +123,7 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
             }
             gl.End();
 
-            if (checkBox_cube.Checked && points != null)
+            if (checkBox_cube.Checked && points.Count > 0)
             {
                 if (clusters == null)
                 {
@@ -138,13 +140,64 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
 
                 }
             }
-            if (checkBox_corridor.Checked && points != null)
+            if (checkBox_corridor.Checked && points.Count > 0)
             {
-                double corridorZ=(double)numericUpDown_corridor.Value;
+                if (points != null)
+                {
+                    if (clusters == null)
+                    {
+                        GenerateCluster();
+                    }
+                    double MaxDistant = (double)numericUpDown_coridorMaxDlin.Value;
+                    float chekX = (float)numericUpDown_corridorX.Value / 2;
+                    float chekY = (float)numericUpDown_corridorZ.Value / 2;
+                    RectangleF rectChek = new RectangleF(-chekX, -chekY, chekX * 2, chekY * 2);
+                    foreach (Cluster cluster in clusters)
+                    {
+                        if (cluster.Points.Count > numericUpDown_clusterMinVes.Value &&
+                            cluster.Radius < (double)numericUpDown_cubeMaxRadius.Value)
+                        {
+                            float X1 = (float)(cluster.Center.X - cluster.RadiusX);
+                            //double Y2 = cluster.Center.X + cluster.RadiusX / 2;
+                            float Y1 = (float)(cluster.Center.Y - cluster.RadiusY);
+                            // double X2 = cluster.Center.Y + cluster.RadiusY / 2;
+                            double Z = -cluster.Center.Z - cluster.RadiusZ;
+                            RectangleF rectangle = new RectangleF(X1, Y1, (float)cluster.RadiusX * 2, (float)cluster.RadiusY * 2);
+                            if (Z > 0)
+                            {
+                                if (RectanglesIntersect(rectChek, rectangle))
+                                {
+                                    if (Z < MaxDistant)
+                                    {
+                                        MaxDistant = Z;
+                                    }
+                                }
+
+                            }
+                        }
+
+
+                    }
+                    numericUpDown_corridor.Value = (decimal)Math.Abs(MaxDistant);
+                }
+                bool RectanglesIntersect(RectangleF rect1, RectangleF rect2)
+                {
+                    // Проверка наложения прямоугольников друг на друга
+                    if (rect1.Contains(rect2.Location) || rect2.Contains(rect1.Location))
+                        return true;
+
+                    // Проверка пересечения проекций прямоугольников на оси координат
+                    if (rect1.Right >= rect2.Left && rect1.Left <= rect2.Right &&
+                        rect1.Bottom >= rect2.Top && rect1.Top <= rect2.Bottom)
+                        return true;
+
+                    return false;
+                }
+                double corridorZ = (double)numericUpDown_corridor.Value;
                 double corridorY = (double)numericUpDown_corridorZ.Value;
                 double corridorX = (double)numericUpDown_corridorX.Value;
-                gl.Color(1f,0f,0f);
-                Draw.Rectangle(gl,0,0, -corridorZ / 2, corridorX, corridorY, corridorZ/2);
+                gl.Color(1f, 0f, 0f);
+                Draw.RectangleQ(gl, 0, 0, -corridorZ / 2, corridorX, corridorY, corridorZ / 2);
             }
 
             gl.End();
@@ -211,8 +264,11 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
             {
                 int start = (int)numericUpDown_start.Value;
                 int delta = (int)numericUpDown_delta.Value;
-                numericUpDown_start.Value = start + GenerateXYZ(start, delta);
-                clusters = null;
+                if (start + delta < packets.Count)
+                {
+                    numericUpDown_start.Value = start + GenerateXYZ(start, delta);
+                    clusters = null;
+                }
             }
 
         }
@@ -283,7 +339,8 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
             void search(int i, double azimuth)
             {
 
-                    for (int j = 2; j < 98; j += 3)
+
+                    for (int j = 2; j < 98 &&j<packets[i].Length-1; j += 3)
                     {
                         double distance = (packets[i][j + 1] * 256 + packets[i][j]) * 0.002;
                         double alpha = Math.PI * angles[((j + 1) / 3) - 1] / 180;
@@ -292,11 +349,10 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
                         double x = distance * Math.Cos(beta) * Math.Cos(alpha);
                         double y = distance * Math.Cos(beta) * Math.Sin(alpha);
                         double z = distance * Math.Sin(beta);
-                        //listBox1.Items.Add(packets[i][j + 2]);
                         points.Add(new Point3D(x, y, z));
 
                     }
-
+                
 
                 //if (packets[i].Length > 98)
                 //{
@@ -361,7 +417,11 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
             {
                 int start = (int)numericUpDown_start.Value;
                 int delta = (int)numericUpDown_delta.Value;
-                numericUpDown_start.Value = start + GenerateXYZ(start, delta);
+                if (start + delta < packets.Count)
+                {
+                    numericUpDown_start.Value = start + GenerateXYZ(start, delta);
+                    clusters = null;
+                }
             }
         }
 
@@ -378,9 +438,9 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
                     GenerateCluster();
                 }
                 double MaxDistant = (double)numericUpDown_corridor.Value;
-                float chekX =(float)numericUpDown_corridorX.Value/2;
-                float chekY = (float)numericUpDown_corridorZ.Value/2;
-                RectangleF rectChek = new RectangleF(-chekX, -chekY, chekX*2, chekY * 2);
+                float chekX = (float)numericUpDown_corridorX.Value / 2;
+                float chekY = (float)numericUpDown_corridorZ.Value / 2;
+                RectangleF rectChek = new RectangleF(-chekX, -chekY, chekX * 2, chekY * 2);
                 foreach (Cluster cluster in clusters)
                 {
                     if (cluster.Points.Count > numericUpDown_clusterMinVes.Value &&
@@ -389,12 +449,12 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
                         float X1 = (float)(cluster.Center.X - cluster.RadiusX);
                         //double Y2 = cluster.Center.X + cluster.RadiusX / 2;
                         float Y1 = (float)(cluster.Center.Y - cluster.RadiusY);
-                       // double X2 = cluster.Center.Y + cluster.RadiusY / 2;
+                        // double X2 = cluster.Center.Y + cluster.RadiusY / 2;
                         double Z = -cluster.Center.Z - cluster.RadiusZ;
-                        RectangleF rectangle = new RectangleF(X1, Y1, (float)cluster.RadiusX*2, (float)cluster.RadiusY*2);
+                        RectangleF rectangle = new RectangleF(X1, Y1, (float)cluster.RadiusX * 2, (float)cluster.RadiusY * 2);
                         if (Z > 0)
                         {
-                            if (RectanglesIntersect(rectChek,rectangle))
+                            if (RectanglesIntersect(rectChek, rectangle))
                             {
                                 if (Z < MaxDistant)
                                 {
@@ -423,6 +483,11 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
                 return false;
             }
 
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            timer1.Interval = (int)(numericUpDown1.Value * 1000);
         }
     }
 }

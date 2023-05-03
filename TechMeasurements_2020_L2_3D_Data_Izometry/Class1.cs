@@ -92,7 +92,7 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
                 // Step 4: Check for convergence
                 bool converged = true;
                 convergenceInt++;
-                for (int i = 0; i < k; i++)
+                for (int i = 0; i <= k; i++)
                 {
                     if (centroids[i] != newCentroids[i])
                     {
@@ -251,7 +251,84 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
             double z2 = z + widthZ;
 
             // Рисуем прямоугольник
+            gl.Begin(OpenGL.GL_LINES);
+            ////
+            gl.Vertex(x1, y1, z1);
+            gl.Vertex(x1, y1, z2);
+            gl.Vertex(x1, y2, z1);
+            gl.Vertex(x1, y2, z2);
+            // Грань X1
+            gl.Vertex(x1, y1, z1);
+            gl.Vertex(x1, y2, z1);
+            gl.Vertex(x1, y2, z2);
+            gl.Vertex(x1, y1, z2);
+            ////
+            gl.Vertex(x2, y2, z1);
+            gl.Vertex(x2, y2, z2);
+            gl.Vertex(x2, y1, z1);
+            gl.Vertex(x2, y1, z2);
+            //// Грань X2
+            gl.Vertex(x2, y1, z1);
+            gl.Vertex(x2, y2, z1);
+            gl.Vertex(x2, y2, z2);
+            gl.Vertex(x2, y1, z2);
+            ////
+            gl.Vertex(x1, y1, z1);
+            gl.Vertex(x1, y1, z2);
+            gl.Vertex(x2, y1, z1);
+            gl.Vertex(x2, y1, z2);
+            // Грань Y1
+            gl.Vertex(x1, y1, z1);
+            gl.Vertex(x2, y1, z1);
+            gl.Vertex(x2, y1, z2);
+            gl.Vertex(x1, y1, z2);
+            /////
+            gl.Vertex(x1, y2, z1);
+            gl.Vertex(x1, y2, z2);
+            gl.Vertex(x2, y2, z1);
+            gl.Vertex(x2, y2, z2);
+            // Грань Y2
+            gl.Vertex(x1, y2, z1);
+            gl.Vertex(x2, y2, z1);
+            gl.Vertex(x2, y2, z2);
+            gl.Vertex(x1, y2, z2);
+            // Грань Z1
+            gl.Vertex(x1, y1, z1);
+            gl.Vertex(x1, y2, z1);
+            gl.Vertex(x2, y1, z1);
+            gl.Vertex(x2, y2, z1);
+            ////
+            gl.Vertex(x1, y1, z1);
+            gl.Vertex(x2, y1, z1);
+            gl.Vertex(x2, y2, z1);
+            gl.Vertex(x1, y2, z1);
+            /////
+            gl.Vertex(x1, y1, z2);
+            gl.Vertex(x1, y2, z2);
+            gl.Vertex(x2, y1, z2);
+            gl.Vertex(x2, y2, z2);
+            // Грань Z2
+            gl.Vertex(x1, y1, z2);
+            gl.Vertex(x2, y1, z2);
+            gl.Vertex(x2, y2, z2);
+            gl.Vertex(x1, y2, z2);
+            
+            gl.End();
+        }
+
+        public static void RectangleQ(OpenGL gl, double x, double y, double z, double widthX, double widthY, double widthZ)
+        {
+            // Вычисляем координаты углов прямоугольника
+            double x1 = x - widthX;
+            double y1 = y - widthY;
+            double z1 = z - widthZ;
+            double x2 = x + widthX;
+            double y2 = y + widthY;
+            double z2 = z + widthZ;
+
+            // Рисуем прямоугольник
             gl.Begin(OpenGL.GL_QUADS);
+
             // Грань X1
             gl.Vertex(x1, y1, z1);
             gl.Vertex(x1, y2, z1);
@@ -282,6 +359,7 @@ namespace TechMeasurements_2020_L2_3D_Data_Izometry
             gl.Vertex(x2, y1, z2);
             gl.Vertex(x2, y2, z2);
             gl.Vertex(x1, y2, z2);
+
             gl.End();
         }
 

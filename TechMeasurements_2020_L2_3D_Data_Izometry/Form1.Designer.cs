@@ -86,6 +86,8 @@
             this.label19 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.numericUpDown_coridorMaxDlin = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Fov)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.openGLControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRZ)).BeginInit();
@@ -110,6 +112,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_corridorZ)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_corridorX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_coridorMaxDlin)).BeginInit();
             this.SuspendLayout();
             // 
             // checkBox_perspective
@@ -361,7 +364,7 @@
             // 
             // buttonLoad
             // 
-            this.buttonLoad.Location = new System.Drawing.Point(3, 424);
+            this.buttonLoad.Location = new System.Drawing.Point(6, 421);
             this.buttonLoad.Name = "buttonLoad";
             this.buttonLoad.Size = new System.Drawing.Size(131, 26);
             this.buttonLoad.TabIndex = 83;
@@ -371,12 +374,12 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 25;
+            this.timer1.Interval = 500;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // button_start
             // 
-            this.button_start.Location = new System.Drawing.Point(451, 426);
+            this.button_start.Location = new System.Drawing.Point(454, 423);
             this.button_start.Name = "button_start";
             this.button_start.Size = new System.Drawing.Size(111, 23);
             this.button_start.TabIndex = 107;
@@ -386,7 +389,7 @@
             // 
             // button_next
             // 
-            this.button_next.Location = new System.Drawing.Point(366, 426);
+            this.button_next.Location = new System.Drawing.Point(369, 423);
             this.button_next.Name = "button_next";
             this.button_next.Size = new System.Drawing.Size(75, 23);
             this.button_next.TabIndex = 106;
@@ -396,7 +399,7 @@
             // 
             // numericUpDown_start
             // 
-            this.numericUpDown_start.Location = new System.Drawing.Point(298, 427);
+            this.numericUpDown_start.Location = new System.Drawing.Point(301, 424);
             this.numericUpDown_start.Maximum = new decimal(new int[] {
             1783793664,
             116,
@@ -408,7 +411,7 @@
             // 
             // numericUpDown_delta
             // 
-            this.numericUpDown_delta.Location = new System.Drawing.Point(182, 427);
+            this.numericUpDown_delta.Location = new System.Drawing.Point(185, 424);
             this.numericUpDown_delta.Maximum = new decimal(new int[] {
             500000,
             0,
@@ -421,7 +424,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(140, 431);
+            this.label4.Location = new System.Drawing.Point(143, 428);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(32, 13);
             this.label4.TabIndex = 112;
@@ -430,7 +433,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(250, 431);
+            this.label8.Location = new System.Drawing.Point(253, 428);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(38, 13);
             this.label8.TabIndex = 113;
@@ -439,29 +442,29 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(7, 90);
+            this.label9.Location = new System.Drawing.Point(23, 69);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(14, 13);
+            this.label9.Size = new System.Drawing.Size(45, 13);
             this.label9.TabIndex = 121;
-            this.label9.Text = "Y";
+            this.label9.Text = "Высота";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(7, 62);
+            this.label10.Location = new System.Drawing.Point(25, 41);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(14, 13);
+            this.label10.Size = new System.Drawing.Size(46, 13);
             this.label10.TabIndex = 120;
-            this.label10.Text = "X";
+            this.label10.Text = "Ширина";
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(7, 119);
+            this.label11.Location = new System.Drawing.Point(23, 95);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(14, 13);
+            this.label11.Size = new System.Drawing.Size(48, 13);
             this.label11.TabIndex = 122;
-            this.label11.Text = "Z";
+            this.label11.Text = "Глубина";
             // 
             // numericUpDown_Zmin
             // 
@@ -471,7 +474,7 @@
             0,
             0,
             65536});
-            this.numericUpDown_Zmin.Location = new System.Drawing.Point(27, 116);
+            this.numericUpDown_Zmin.Location = new System.Drawing.Point(77, 93);
             this.numericUpDown_Zmin.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -499,7 +502,7 @@
             0,
             0,
             65536});
-            this.numericUpDown_Ymin.Location = new System.Drawing.Point(27, 90);
+            this.numericUpDown_Ymin.Location = new System.Drawing.Point(77, 67);
             this.numericUpDown_Ymin.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -527,7 +530,7 @@
             0,
             0,
             65536});
-            this.numericUpDown_Xmax.Location = new System.Drawing.Point(85, 62);
+            this.numericUpDown_Xmax.Location = new System.Drawing.Point(135, 39);
             this.numericUpDown_Xmax.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -555,7 +558,7 @@
             0,
             0,
             65536});
-            this.numericUpDown_Zmax.Location = new System.Drawing.Point(85, 116);
+            this.numericUpDown_Zmax.Location = new System.Drawing.Point(135, 93);
             this.numericUpDown_Zmax.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -583,7 +586,7 @@
             0,
             0,
             65536});
-            this.numericUpDown_Ymax.Location = new System.Drawing.Point(85, 90);
+            this.numericUpDown_Ymax.Location = new System.Drawing.Point(135, 67);
             this.numericUpDown_Ymax.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -611,7 +614,7 @@
             0,
             0,
             65536});
-            this.numericUpDown_Xmin.Location = new System.Drawing.Point(27, 62);
+            this.numericUpDown_Xmin.Location = new System.Drawing.Point(77, 39);
             this.numericUpDown_Xmin.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -634,7 +637,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(84, 46);
+            this.label12.Location = new System.Drawing.Point(134, 23);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(61, 13);
             this.label12.TabIndex = 124;
@@ -643,7 +646,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(24, 46);
+            this.label13.Location = new System.Drawing.Point(74, 23);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(55, 13);
             this.label13.TabIndex = 123;
@@ -652,7 +655,7 @@
             // checkBox_otsrch
             // 
             this.checkBox_otsrch.AutoSize = true;
-            this.checkBox_otsrch.Location = new System.Drawing.Point(27, 26);
+            this.checkBox_otsrch.Location = new System.Drawing.Point(77, 3);
             this.checkBox_otsrch.Name = "checkBox_otsrch";
             this.checkBox_otsrch.Size = new System.Drawing.Size(80, 17);
             this.checkBox_otsrch.TabIndex = 125;
@@ -716,7 +719,11 @@
             // checkBox_cube
             // 
             this.checkBox_cube.AutoSize = true;
+<<<<<<< HEAD
             this.checkBox_cube.Location = new System.Drawing.Point(153, 142);
+=======
+            this.checkBox_cube.Location = new System.Drawing.Point(10, 179);
+>>>>>>> готово
             this.checkBox_cube.Name = "checkBox_cube";
             this.checkBox_cube.Size = new System.Drawing.Size(112, 17);
             this.checkBox_cube.TabIndex = 129;
@@ -725,7 +732,11 @@
             // 
             // numericUpDown_cubeMaxRadius
             // 
+<<<<<<< HEAD
             this.numericUpDown_cubeMaxRadius.Location = new System.Drawing.Point(220, 178);
+=======
+            this.numericUpDown_cubeMaxRadius.Location = new System.Drawing.Point(77, 215);
+>>>>>>> готово
             this.numericUpDown_cubeMaxRadius.Maximum = new decimal(new int[] {
             1783793664,
             116,
@@ -742,7 +753,11 @@
             // 
             // numericUpDown_clusterMinVes
             // 
+<<<<<<< HEAD
             this.numericUpDown_clusterMinVes.Location = new System.Drawing.Point(153, 178);
+=======
+            this.numericUpDown_clusterMinVes.Location = new System.Drawing.Point(10, 215);
+>>>>>>> готово
             this.numericUpDown_clusterMinVes.Maximum = new decimal(new int[] {
             1783793664,
             116,
@@ -755,7 +770,9 @@
             // checkBox_corridor
             // 
             this.checkBox_corridor.AutoSize = true;
-            this.checkBox_corridor.Location = new System.Drawing.Point(153, 12);
+            this.checkBox_corridor.Checked = true;
+            this.checkBox_corridor.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_corridor.Location = new System.Drawing.Point(198, 107);
             this.checkBox_corridor.Name = "checkBox_corridor";
             this.checkBox_corridor.Size = new System.Drawing.Size(69, 17);
             this.checkBox_corridor.TabIndex = 132;
@@ -765,7 +782,11 @@
             // label14
             // 
             this.label14.AutoSize = true;
+<<<<<<< HEAD
             this.label14.Location = new System.Drawing.Point(204, 162);
+=======
+            this.label14.Location = new System.Drawing.Point(61, 199);
+>>>>>>> готово
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(75, 13);
             this.label14.TabIndex = 133;
@@ -774,7 +795,11 @@
             // label15
             // 
             this.label15.AutoSize = true;
+<<<<<<< HEAD
             this.label15.Location = new System.Drawing.Point(150, 162);
+=======
+            this.label15.Location = new System.Drawing.Point(7, 199);
+>>>>>>> готово
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(37, 13);
             this.label15.TabIndex = 134;
@@ -783,7 +808,7 @@
             // numericUpDown_corridor
             // 
             this.numericUpDown_corridor.DecimalPlaces = 4;
-            this.numericUpDown_corridor.Location = new System.Drawing.Point(202, 35);
+            this.numericUpDown_corridor.Location = new System.Drawing.Point(209, 159);
             this.numericUpDown_corridor.Maximum = new decimal(new int[] {
             1783793664,
             116,
@@ -801,7 +826,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(150, 37);
+            this.label16.Location = new System.Drawing.Point(158, 161);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(46, 13);
             this.label16.TabIndex = 136;
@@ -810,7 +835,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(151, 63);
+            this.label17.Location = new System.Drawing.Point(158, 187);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(45, 13);
             this.label17.TabIndex = 137;
@@ -819,7 +844,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(151, 89);
+            this.label18.Location = new System.Drawing.Point(158, 213);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(46, 13);
             this.label18.TabIndex = 138;
@@ -833,7 +858,7 @@
             0,
             0,
             65536});
-            this.numericUpDown_corridorZ.Location = new System.Drawing.Point(202, 61);
+            this.numericUpDown_corridorZ.Location = new System.Drawing.Point(209, 185);
             this.numericUpDown_corridorZ.Maximum = new decimal(new int[] {
             1783793664,
             116,
@@ -856,7 +881,7 @@
             0,
             0,
             65536});
-            this.numericUpDown_corridorX.Location = new System.Drawing.Point(202, 87);
+            this.numericUpDown_corridorX.Location = new System.Drawing.Point(209, 211);
             this.numericUpDown_corridorX.Maximum = new decimal(new int[] {
             1783793664,
             116,
@@ -873,7 +898,7 @@
             // 
             // button_coridor
             // 
-            this.button_coridor.Location = new System.Drawing.Point(153, 113);
+            this.button_coridor.Location = new System.Drawing.Point(160, 237);
             this.button_coridor.Name = "button_coridor";
             this.button_coridor.Size = new System.Drawing.Size(107, 23);
             this.button_coridor.TabIndex = 141;
@@ -892,30 +917,76 @@
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(640, 427);
+            this.numericUpDown1.DecimalPlaces = 3;
+            this.numericUpDown1.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDown1.Location = new System.Drawing.Point(643, 424);
             this.numericUpDown1.Maximum = new decimal(new int[] {
-            500000,
+            2,
             0,
             0,
             0});
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(58, 20);
             this.numericUpDown1.TabIndex = 143;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(572, 431);
+            this.label20.Location = new System.Drawing.Point(575, 428);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(58, 13);
             this.label20.TabIndex = 144;
             this.label20.Text = "Задержка";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(141, 135);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(63, 13);
+            this.label21.TabIndex = 146;
+            this.label21.Text = "Дальность";
+            // 
+            // numericUpDown_coridorMaxDlin
+            // 
+            this.numericUpDown_coridorMaxDlin.DecimalPlaces = 4;
+            this.numericUpDown_coridorMaxDlin.Location = new System.Drawing.Point(209, 135);
+            this.numericUpDown_coridorMaxDlin.Maximum = new decimal(new int[] {
+            1783793664,
+            116,
+            0,
+            0});
+            this.numericUpDown_coridorMaxDlin.Name = "numericUpDown_coridorMaxDlin";
+            this.numericUpDown_coridorMaxDlin.Size = new System.Drawing.Size(58, 20);
+            this.numericUpDown_coridorMaxDlin.TabIndex = 145;
+            this.numericUpDown_coridorMaxDlin.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(895, 450);
+            this.Controls.Add(this.label21);
+            this.Controls.Add(this.numericUpDown_coridorMaxDlin);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.label19);
@@ -998,6 +1069,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_corridorZ)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_corridorX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_coridorMaxDlin)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1062,6 +1134,8 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.NumericUpDown numericUpDown_coridorMaxDlin;
     }
 }
 
